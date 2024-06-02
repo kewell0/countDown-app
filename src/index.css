@@ -32,10 +32,9 @@ body {
 
 .app {
   margin: 0 auto;
-  /* padding: 40px; */
-  width: 90%;
-  width: 350px;
-  min-height: 600px;
+
+  min-width: 100vw;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -52,7 +51,7 @@ body {
 
 @media (max-width: 768px) {
   .app {
-    width: 95%;
+    min-width: 100vw;
     padding: 10px;
   }
 }
