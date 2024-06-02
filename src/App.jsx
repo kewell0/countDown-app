@@ -1,12 +1,17 @@
-import { useState } from "react";
-import "./App.css";
+import { useState, useRef } from "react";
+import TimerControls from "./components/TimerControls";
+import TimerInput from "./components/TimerInput";
+import TimerDisplay from "./components/TimerDisplay";
 
 function App() {
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [hour, setHour] = useState(0);
-  const [timer, setTimer] = useState("00:00:00");
-  const [timeInterval, setTimeInterval] = useState(null);
+  const [timer, setTimer] = useState("");
+  const [initialTimer, setInitialTimer] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
+  const timeInterval = useRef(null);
 
   const handleTimer = (countDownTime) => {
     let now = new Date().getTime();
@@ -17,27 +22,65 @@ function App() {
       setMinutes(Math.floor((interval % (1000 * 60 * 60)) / (1000 * 60)));
       setSeconds(Math.floor((interval % (1000 * 60)) / 1000));
     } else {
-      clearInterval(timeInterval);
+      clearInterval(timeInterval.current);
+      setIsRunning(false);
     }
   };
 
   const handleStart = () => {
+    if (!isPaused) {
+      setInitialTimer(timer);
+    }
     const countDownTime = Date.now() + timer * 1000;
-    setTimeInterval(setInterval(handleTimer, 1000, countDownTime));
+    timeInterval.current = setInterval(() => handleTimer(countDownTime), 1000);
+    setIsPaused(false);
+    setIsRunning(true);
+  };
+
+  const handlePause = () => {
+    clearInterval(timeInterval.current);
+    setIsPaused(true);
+  };
+
+  const handleReset = () => {
+    clearInterval(timeInterval.current);
+    setHour(Math.floor(initialTimer / 3600));
+    setMinutes(Math.floor((initialTimer % 3600) / 60));
+    setSeconds(initialTimer % 60);
+    setTimer(initialTimer);
+    setIsPaused(false);
+    setIsRunning(false);
+  };
+
+  const handleStop = () => {
+    clearInterval(timeInterval.current);
+    setHour(0);
+    setMinutes(0);
+    setSeconds(0);
+    setTimer("");
+    setIsPaused(false);
+    setIsRunning(false);
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="input time"
-        onChange={(e) => setTimer(e.target.value)}
-      />
-      <button onClick={handleStart}>start</button>
-
-      <h1>
-        {hour}:{minutes}:{seconds}
-      </h1>
+    <div className="app">
+      <TimerDisplay hour={hour} minutes={minutes} seconds={seconds} />
+      <div className="timerInput">
+        <TimerInput
+          timer={timer}
+          setTimer={setTimer}
+          setInitialTimer={setInitialTimer}
+        />
+      </div>
+      <div className="controls">
+        {isRunning ? (
+          <TimerControls onClick={handleStop} label={"stop"} />
+        ) : (
+          <TimerControls onClick={handleStart} label={"start"} />
+        )}
+        <TimerControls onClick={handlePause} label={"pause"} />
+        <TimerControls onClick={handleReset} label={"reset"} />
+      </div>
     </div>
   );
 }
