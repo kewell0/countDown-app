@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import TimerControls from "./components/TimerControls";
 import TimerInput from "./components/TimerInput";
 import TimerDisplay from "./components/TimerDisplay";
+import logo from "./assets/timer2.svg";
 
 function App() {
   const [seconds, setSeconds] = useState(0);
@@ -64,6 +65,7 @@ function App() {
 
   return (
     <div className="app">
+      <img src={logo} alt="logo" />
       <TimerDisplay hour={hour} minutes={minutes} seconds={seconds} />
       <div className="timerInput">
         <TimerInput
@@ -74,12 +76,28 @@ function App() {
       </div>
       <div className="controls">
         {isRunning ? (
-          <TimerControls onClick={handleStop} label={"stop"} />
+          <TimerControls
+            onClick={handleStop}
+            label={"stop"}
+            backgroundColor="#eb645f"
+          />
         ) : (
-          <TimerControls onClick={handleStart} label={"start"} />
+          <TimerControls
+            onClick={handleStart}
+            label={"start"}
+            backgroundColor="#2E8B57"
+          />
         )}
-        <TimerControls onClick={handlePause} label={"pause"} />
-        <TimerControls onClick={handleReset} label={"reset"} />
+        <TimerControls
+          onClick={handlePause}
+          label={"pause"}
+          backgroundColor="#ff9601"
+        />
+        <TimerControls
+          onClick={handleReset}
+          label={"reset"}
+          backgroundColor="#1a1a1a"
+        />
       </div>
     </div>
   );

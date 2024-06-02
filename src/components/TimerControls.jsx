@@ -1,12 +1,11 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
-import React from "react";
 
-const TimerControls = ({ onClick, label }) => {
+const TimerControls = ({ onClick, label, backgroundColor }) => {
   return (
     <>
-      {/* <button onClick={handlePause}>{label}</button> */}
-      <button onClick={onClick}>{label}</button>
+      <button onClick={onClick} style={{ backgroundColor }}>
+        {label}
+      </button>
     </>
   );
 };
